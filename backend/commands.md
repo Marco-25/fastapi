@@ -19,3 +19,12 @@
     - executar migration
         - alembic revision --autogenerate -m "commit"
         - alembic upgrade head
+
+## hash password
+    - pipenv install passlib[bcrypt]
+
+## JWT 
+
+    - pipenv install python-jose[cryptography]
+
+        

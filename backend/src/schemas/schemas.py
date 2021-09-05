@@ -2,35 +2,88 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 
-class User(BaseModel):
-    id: Optional[str] = None
-    name: str
-    phone: str
-    password: str
-    # my_products: List[Product] = []
-    # my_sales: List[Order]
-    # my_shopping: List[Order]
-
-
-class Product(BaseModel):
-    id: Optional[str] = None
-    # user: User
+class ProductResponse(BaseModel):
+    id: Optional[int] = None
     name: str
     details: str
     price: float
     available: bool = False
-    # photo: Optional[str]
+
+    class Config:
+        orm_mode = True
+
+
+class User(BaseModel):
+    id: Optional[int] = None
+    name: str
+    phone: str
+    password: str
+    products: List[ProductResponse] = []
+
+    class Config:
+        orm_mode = True
+
+
+class UserAutenticad(BaseModel):
+    id: int
+    name: str
+    phone: str
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserResponse(BaseModel):
+    id: Optional[int] = None
+    name: str
+    phone: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserResponseToken(BaseModel):
+    user: UserResponse
+    access_token: str
+
+    class Config:
+        orm_mode = True
+
+
+class Login(BaseModel):
+    phone: str
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class Product(BaseModel):
+    id: Optional[int] = None
+    name: str
+    details: str
+    price: float
+    available: bool = False
+    user_id: int
+    user: Optional[UserResponse]
 
     class Config:
         orm_mode = True
 
 
 class Order(BaseModel):
-    id: Optional[str] = None
-    # user: User
-    # product: Product
+    id: Optional[int] = None
     amount: int
-    delivery_place: bool = True
-    observation: str
-    # (entrega ou retirada)
-    delivery_or_withdrawal: Optional[str] = 'Sem obeservações'
+    delivery_place: Optional[str]
+    delivery_type: str
+    observation:  Optional[str] = 'Sem obeservações'
+
+    user_id: int
+    product_id: int
+
+    user: Optional[UserResponse]
+    product: Optional[ProductResponse]
+
+    class Config:
+        orm_mode = True
